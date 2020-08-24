@@ -119,19 +119,22 @@ best_model = RandomForestRegressor(bootstrap= True,
 best_model.fit(X_train, y_train)
 print(show_scores(best_model))
 
-y_pred = best_model.predict(X_test)
-
+y_pred_test = best_model.predict(X_test)
+y_pred_train = best_model.predict(X_train)
+print(type(y_pred_train))
+y_pred = np.concatenate((y_pred_train, y_pred_test))
 ####Plotting date vs Y with offline plotly
 
 
 fig = go.Figure()
-fig.add_trace(go.Scatter(x=X_test_date, y=y_test,
-                         mode='lines',
-                         name='True Lables'))
-fig.add_trace(go.Scatter(x=X_test_date,
+fig.add_trace(go.Scatter(x=date,
                          y=y_pred,
                          mode='lines+markers',
                          name='Predicted Labels'))
+fig.add_trace(go.Scatter(x=X_train_date, y=y_pred_train,
+                         mode='lines',
+                         name='Trained Lables'))
+
 
 
 fig.update_layout(
